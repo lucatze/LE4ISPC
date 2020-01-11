@@ -17,7 +17,7 @@ set -e
 lelive=/etc/letsencrypt/live/$(hostname -f)
 if [ $(dpkg-query -W -f='${Status}' nginx 2>/dev/null | grep -c "ok installed") -eq 0 ] && [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
 	websvr=0
-	if [ ! -d "$lelive" ]; then certbot certonly --authenticator standalone -d $(hostname -f); fi
+	if [ ! -d "$lelive" ]; then certbot-auto certonly --authenticator standalone -d $(hostname -f); fi
 else
 	if [ $(dpkg-query -W -f='${Status}' nginx 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
 		websvr=nginx
@@ -25,7 +25,7 @@ else
 		websvr=apache2
 	fi
 	if [ ! -d "$lelive" ]; then 
-		certbot certonly --authenticator standalone -d $(hostname -f) --pre-hook "service $websvr stop" --post-hook "service $websvr start"
+		certbot-auto certonly --authenticator standalone -d $(hostname -f) --pre-hook "service $websvr stop" --post-hook "service $websvr start"
 	fi
 fi
 
